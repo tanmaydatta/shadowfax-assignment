@@ -10,20 +10,9 @@ import soldier
 import thread
 from server import queue_data
 
-Q = {}
-# def socket_thread():
-# 	global clients_set
-# 	global files_mapping
-# 	global s
-# 	while 1:
-# 		conn, addr = s.accept()
-# 		thread.start_new_thread(new_client, (conn, addr, clients_set, files_mapping))
-
-
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-	global Q
 	if request.method == 'GET':
 		return render_template('index.html')
 
@@ -40,7 +29,7 @@ def index():
 				# f.close()
 				a=soldier.run('touch app/files/' + filename)
 				start_queue(filename)
-				print 'ddddddddddddddddd'
+				# print 'ddddddddddddddddd'
 				# r.rpush(filename," ")
 				# Q['filename']=[]
 			else:
@@ -56,7 +45,7 @@ def index():
 			a=soldier.run('touch app/files/' + filename)
 			# Q['filename']=[]
 			start_queue(filename)
-			print 'ddddddddddddddddd'
+			# print 'ddddddddddddddddd'
 			# r.rpush(filename," ")
 			if r.get(filename+'pass')!=passwd:
 				return redirect('/')
@@ -70,10 +59,10 @@ def index():
 		return redirect('/edit/' + filename)
 
 
-@app.route('/edit/<filename>/', methods=['GET', 'POST'])
+@app.route('/edit/<filename>/', methods=['GET'])
 @login_required
 def edit(filename):
-	print 'edit1'
+	# print 'edit1'
 	
 	if request.method == 'GET':
 		try:
@@ -86,7 +75,5 @@ def edit(filename):
 		ip=os.popen("ip route get 8.8.8.8 | awk '{print $NF; exit}'").read()
 		print ip.split()[0]
 		return render_template('file.html', data=data,ip=ip.split()[0])
-	else:
-		return 'hello'
 
 

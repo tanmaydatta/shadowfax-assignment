@@ -115,32 +115,6 @@ def handle_client_handshake(conn):
 	resp_data = HSHAKE_RESP % ((base64.b64encode(hashlib.sha1(key+MAGIC).digest()),))
 	conn.send(resp_data)
 
-def send_to_client(data, conn, ad,data_recv):
-	# ipdb.set_trace()
-	global clients_set
-	filename = r.get(ad[0])
-	while r.get(filename+'lock') == 1:
-		pass
-	r.set(filename+'lock',1)
-	f=open('app/files/' + filename,'w')
-	f.write(data_recv['value']);
-	f.close()
-	for con,addr in clients_set:
-		print con,addr
-		if r.get(addr[0]) == filename and addr[0]!=ad[0]:
-			try:
-				con.send(data)
-				print 'sent'
-			except:
-				print 'error'
-				pass
-	r.set(filename+'lock',0)
-	# try:
-	#     conn.sendall(data)
-	# except:
-	#     print("error sending to a client")
-
-
 
 
 def new_client(conn, addr, clients_set, files_mapping):
@@ -156,13 +130,13 @@ def new_client(conn, addr, clients_set, files_mapping):
 		data_recv = conn.recv(4096)
 		if not data_recv:
 			break
-		print "data received ======= " + data_recv
+		# print "data received ======= " + data_recv
 		try:
 			# ipsb.set_trace()
-			print 'decoding'
+			# print 'decoding'
 			data_from_client = decode_data(data_recv)
 			data_from_client = json.loads(data_from_client)
-			print 'decoded ====== ' + data_from_client['value']
+			# print 'decoded ====== ' + data_from_client['value']
 			# send_to_client(encode_data(str(convert(data_from_client))), conn, addr,data_from_client)
 			r.rpush(filename+'queue', data_from_client['value']+'$$$'+str(data_from_client['cursor']))
 			r.rpush(filename+'enqueue', str(convert(data_from_client)))
@@ -175,15 +149,7 @@ def new_client(conn, addr, clients_set, files_mapping):
 			# save_to_file(data_from_client, open_file_name)
 			# send_updated_file(data_from_client, open_file_name, clients_set, files_mapping)
 
-	print "exit"
-# if __name__ == "__main__":
-#     clients_set = set()
-#     files_mapping = {}
-#     s = start_server(HOST, PORT)
-
-	# while 1:
-	#     conn, addr = s.accept()
-	#     thread.start_new_thread(new_client, (conn, addr, clients_set, files_mapping))
+	# print "exit"
 
 def socket_thread():
 	global clients_set
