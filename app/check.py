@@ -11,6 +11,7 @@ def login_required(f):
 			if session['logged_in'] != kwargs['filename']:
 				print 'error'
 				return redirect('/')
+			# return redirect('/')
 			return f(*args, **kwargs)
 		except:
 			return redirect('/')
