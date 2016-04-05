@@ -54,7 +54,7 @@ function doGetCaretPosition (oField) {
     return iCaretPos;
 }
 $(document).ready(function() {
-    var PORT = 8887;
+    var PORT = 8888;
     var temp;
     var s = new WebSocket("ws://{{ip}}:" + PORT + "/");
     var text = $('#file');
@@ -75,6 +75,7 @@ $(document).ready(function() {
     //   }
     // });
     text.on('keypress', function(e) {
+        console.log(e.keyCode);
         var inp = String.fromCharCode(e.keyCode);
         // console.log(e);
         var key = e.keyCode;
@@ -92,7 +93,7 @@ $(document).ready(function() {
             console.log(JSON.stringify(obj) + 'send');
             s.send(JSON.stringify(obj));
         }
-        else if ( / [a - zA - Z0 - 9 - _ ] / .test(inp))
+        else if ( /[a-zA-Z0-9-_]/.test(inp))
         {
             console.log("here");
             var obj = {value: key.toString(), cursor: pos};
@@ -101,6 +102,7 @@ $(document).ready(function() {
         }
     });
     text.on('keydown', function(e) {
+        console.log(e.keyCode);
         var inp = String.fromCharCode(e.keyCode);
         // console.log(e);
         var key = e.keyCode;

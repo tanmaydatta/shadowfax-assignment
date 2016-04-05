@@ -13,7 +13,7 @@ import time
 
 ip=os.popen("ip route get 8.8.8.8 | awk '{print $NF; exit}'").read()
 HOST = ip.split()[0]
-PORT = 8887
+PORT = 8888
 MAGIC = '258EAFA5-E914-47DA-95CA-C5AB0DC85B11'
 HSHAKE_RESP = "HTTP/1.1 101 Switching Protocols\r\n" + \
 			"Upgrade: websocket\r\n" + \
