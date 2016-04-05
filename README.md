@@ -12,6 +12,6 @@
 
 ##NOTE:
 * The changes are being sent to the server character by character. Hence copy/paste/bulk delete is not supported.
-* Only alphanumeric characters are supported.
+* Only alphanumeric characters are supported (no new line).
 * The changed effect is not shown instantly (not perfect).
 * To see changes log in from different ip(computers).
