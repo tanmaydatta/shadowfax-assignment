@@ -9,14 +9,14 @@
 function setCaretPosition(elemId, caretPos) {
     var elem = document.getElementById(elemId);
 
-    if(elem != null) {
-        if(elem.createTextRange) {
+    if (elem != null) {
+        if (elem.createTextRange) {
             var range = elem.createTextRange();
             range.move('character', caretPos);
             range.select();
         }
         else {
-            if(elem.selectionStart) {
+            if (elem.selectionStart) {
                 elem.focus();
                 elem.setSelectionRange(caretPos, caretPos);
             }
@@ -27,114 +27,101 @@ function setCaretPosition(elemId, caretPos) {
 }
 function doGetCaretPosition (oField) {
 
-  // Initialize
-  var iCaretPos = 0;
+    // Initialize
+    var iCaretPos = 0;
 
-  // IE Support
-  if (document.selection) {
+    // IE Support
+    if (document.selection) {
 
-    // Set focus on the element
-    oField.focus();
+        // Set focus on the element
+        oField.focus();
 
-    // To get cursor position, get empty selection range
-    var oSel = document.selection.createRange();
+        // To get cursor position, get empty selection range
+        var oSel = document.selection.createRange();
 
-    // Move selection start to 0 position
-    oSel.moveStart('character', -oField.value.length);
+        // Move selection start to 0 position
+        oSel.moveStart('character', -oField.value.length);
 
-    // The caret position is selection length
-    iCaretPos = oSel.text.length;
-  }
+        // The caret position is selection length
+        iCaretPos = oSel.text.length;
+    }
 
-  // Firefox support
-  else if (oField.selectionStart || oField.selectionStart == '0')
-    iCaretPos = oField.selectionStart;
+    // Firefox support
+    else if (oField.selectionStart || oField.selectionStart == '0')
+        iCaretPos = oField.selectionStart;
 
-  // Return results
-  return iCaretPos;
+    // Return results
+    return iCaretPos;
 }
-	$(document).ready(function() {
-  var PORT = 8887;
-  var temp;
-  var s = new WebSocket("ws://{{ip}}:" + PORT + "/");
-  var text = $('#file');
-  var isConSet = false;
-  // text.on('input', function() {
-  //   var value = text.val();
-  //   // console.log(document.getElementById('file'));
-  //   // textbox();
-  //   console.log(value);
-  //   console.log(isConSet);
-  //   if (isConSet && value) {
-  //     console.log('Sending Value');
-  //     var pos = doGetCaretPosition(document.getElementById('file'));
-  //     // console.log(pos);
-  //     var obj = {value:value,cursor:pos};
-  //     // console.log(JSON.stringify(obj) + 'send');
-  //     // s.send(JSON.stringify(obj));
-  //   }
-  // });
-  text.on('keypress', function(e) {
-    var inp = String.fromCharCode(e.keyCode);
-    // console.log(e);
-    var key = e.keyCode;
-    var pos = doGetCaretPosition(document.getElementById('file'));
-    pos=pos+1;
-    if(e.keyCode == 46)
-    {
-      var obj = {value:'46',cursor:pos};
-      console.log(JSON.stringify(obj) + 'send');
-      s.send(JSON.stringify(obj));
-    }
-    else if (e.keyCode == 8)
-    {
-     var obj = {value:'8',cursor:pos+1};
-      console.log(JSON.stringify(obj) + 'send');
-      s.send(JSON.stringify(obj));
-    }
-      else if(/[a-zA-Z0-9-_ ]/.test(inp))
-    {
-      console.log("here");
-      var obj = {value:key.toString(),cursor:pos};
-      console.log(JSON.stringify(obj) + 'send');
-      s.send(JSON.stringify(obj));
-    }
-  });
-  text.on('keydown', function(e) {
-    var inp = String.fromCharCode(e.keyCode);
-    // console.log(e);
-    var key = e.keyCode;
-    var pos = doGetCaretPosition(document.getElementById('file'));
-    // pos=pos+1;
-    if(e.keyCode == 46)
-    {
-      var obj = {value:'46',cursor:pos};
-      console.log(JSON.stringify(obj) + 'send');
-      s.send(JSON.stringify(obj));
-    }
-    else if (e.keyCode == 8)
-    {
-     var obj = {value:'8',cursor:pos+1};
-      console.log(JSON.stringify(obj) + 'send');
-      s.send(JSON.stringify(obj));
-    }
-     
-  });
-  Object.byString = function(o, s) {
-    s = s.replace(/\[(\w+)\]/g, '.$1'); // convert indexes to properties
-    s = s.replace(/^\./, '');           // strip a leading dot
-    var a = s.split('.');
-    for (var i = 0, n = a.length; i < n; ++i) {
-        var k = a[i];
-        if (k in o) {
-            o = o[k];
-        } else {
-            return;
+$(document).ready(function() {
+    var PORT = 8887;
+    var temp;
+    var s = new WebSocket("ws://{{ip}}:" + PORT + "/");
+    var text = $('#file');
+    var isConSet = false;
+    // text.on('input', function() {
+    //   var value = text.val();
+    //   // console.log(document.getElementById('file'));
+    //   // textbox();
+    //   console.log(value);
+    //   console.log(isConSet);
+    //   if (isConSet && value) {
+    //     console.log('Sending Value');
+    //     var pos = doGetCaretPosition(document.getElementById('file'));
+    //     // console.log(pos);
+    //     var obj = {value:value,cursor:pos};
+    //     // console.log(JSON.stringify(obj) + 'send');
+    //     // s.send(JSON.stringify(obj));
+    //   }
+    // });
+    text.on('keypress', function(e) {
+        var inp = String.fromCharCode(e.keyCode);
+        // console.log(e);
+        var key = e.keyCode;
+        var pos = doGetCaretPosition(document.getElementById('file'));
+        pos = pos + 1;
+        if (e.keyCode == 46)
+        {
+            var obj = {value: '46', cursor: pos};
+            console.log(JSON.stringify(obj) + 'send');
+            s.send(JSON.stringify(obj));
         }
-    }
-    return o;
-}
-  // text.on('input', function() {
+        else if (e.keyCode == 8)
+        {
+            var obj = {value: '8', cursor: pos + 1};
+            console.log(JSON.stringify(obj) + 'send');
+            s.send(JSON.stringify(obj));
+        }
+        else if ( / [a - zA - Z0 - 9 - _ ] / .test(inp))
+        {
+            console.log("here");
+            var obj = {value: key.toString(), cursor: pos};
+            console.log(JSON.stringify(obj) + 'send');
+            s.send(JSON.stringify(obj));
+        }
+    });
+    text.on('keydown', function(e) {
+        var inp = String.fromCharCode(e.keyCode);
+        // console.log(e);
+        var key = e.keyCode;
+        var pos = doGetCaretPosition(document.getElementById('file'));
+        // pos=pos+1;
+        if (e.keyCode == 46)
+        {
+            var obj = {value: '46', cursor: pos};
+            console.log(JSON.stringify(obj) + 'send');
+            s.send(JSON.stringify(obj));
+        }
+        else if (e.keyCode == 8)
+        {
+            var obj = {value: '8', cursor: pos + 1};
+            console.log(JSON.stringify(obj) + 'send');
+            s.send(JSON.stringify(obj));
+        }
+
+    });
+    
+    // text.on('input', function() {
     // var value = text.val();
     // textbox();
     // console.log(value);
@@ -143,101 +130,101 @@ function doGetCaretPosition (oField) {
     //   s.send(value);
     // }
     s.onopen = function() {
-    console.log('Onload');
-    isConSet = true;
-  };
+        console.log('Onload');
+        isConSet = true;
+    };
 
-  s.onclose = function(error) {
-    console.log('Websocket error ' + error);
-  };
+    s.onclose = function(error) {
+        console.log('Websocket error ' + error);
+    };
 
-  s.onmessage = function(e) {
-    var value = e.data;
-    console.log('onmessage');
-    // console.log('Server ' + value);
+    s.onmessage = function(e) {
+        var value = e.data;
+        console.log('onmessage');
+        // console.log('Server ' + value);
 
-      // console.log('"'+value+'"');
-      // console.log(value.value);
-      // var x = eval('("'+value+'")');
-      // var y = eval(value);
-      // console.log(x.value);
-      x=value;
-      // console.log(x);
-      x=x.replace(/'(\w+)'\s*:/g, '$1:')
-      // x=x.replace(/"/g, "'");
-      x='('+x+')';
-      // x=JSON.stringify(x);
-      x=eval(x);
-      console.log(x['value']);
-      var pos = doGetCaretPosition(document.getElementById('file'));
-      var cursor = parseInt(x['cursor']);
-      var val = parseInt(x['value']);
-      val = String.fromCharCode(val);
-      // console.log("character === " + val);
-      if(cursor > pos)
-      {
-        if(parseInt(x['value'])==8)
+        // console.log('"'+value+'"');
+        // console.log(value.value);
+        // var x = eval('("'+value+'")');
+        // var y = eval(value);
+        // console.log(x.value);
+        x = value;
+        // console.log(x);
+        x=x.replace(/'(\w+)'\s*:/g, '$1:')
+            // x=x.replace(/"/g, "'");
+            x = '(' + x + ')';
+        // x=JSON.stringify(x);
+        x = eval(x);
+        console.log(x['value']);
+        var pos = doGetCaretPosition(document.getElementById('file'));
+        var cursor = parseInt(x['cursor']);
+        var val = parseInt(x['value']);
+        val = String.fromCharCode(val);
+        // console.log("character === " + val);
+        if (cursor > pos)
         {
-          var temp = text.val();
-          temp = temp.substr(0, cursor-2) + temp.substr(cursor-1) ;
-          console.log("backspace ==== " + temp);
-          text.val(temp);
-          setCaretPosition('file', pos);
-        } 
-        else if(parseInt(x['value'])==46)
-        {
-          var temp = text.val();
-          // text.val(x['value']);
-          temp = temp.substr(0, cursor) +temp.substr(cursor+1);
-          text.val(temp);
-          setCaretPosition('file', pos -1 );
+            if (parseInt(x['value']) == 8)
+            {
+                var temp = text.val();
+                temp = temp.substr(0, cursor - 2) + temp.substr(cursor - 1) ;
+                console.log("backspace ==== " + temp);
+                text.val(temp);
+                setCaretPosition('file', pos);
+            }
+            else if (parseInt(x['value']) == 46)
+            {
+                var temp = text.val();
+                // text.val(x['value']);
+                temp = temp.substr(0, cursor) + temp.substr(cursor + 1);
+                text.val(temp);
+                setCaretPosition('file', pos - 1 );
+            }
+            else
+            {
+                var temp = text.val();
+                temp = temp.substr(0, cursor - 1) + val + temp.substr(cursor - 1);
+                console.log("end === " + temp);
+                text.val(temp);
+                setCaretPosition('file', pos);
+            }
         }
         else
         {
-          var temp = text.val();
-          temp = temp.substr(0, cursor-1) + val+temp.substr(cursor-1);
-          console.log("end === " + temp);
-          text.val(temp);
-          setCaretPosition('file',pos);
+            if (parseInt(x['value']) == 8)
+            {
+                var temp = text.val();
+                temp = temp.substr(0, cursor - 2) + temp.substr(cursor - 1);
+                console.log("backspace less ==== " + temp);
+                text.val(temp);
+                setCaretPosition('file', pos - 1 );
+            }
+            else if (parseInt(x['value']) == 46)
+            {
+                var temp = text.val();
+                // text.val(x['value']);
+                temp = temp.substr(0, cursor) + temp.substr(cursor + 1);
+                text.val(temp);
+                setCaretPosition('file', pos );
+            }
+            else
+            {
+                var temp = text.val();
+                // text.val(x['value']);
+                temp = temp.substr(0, cursor - 1) + val + temp.substr(cursor - 1);
+                console.log(temp);
+                text.val(temp);
+                setCaretPosition('file', pos + 1 );
+            }
         }
-      }
-      else
-      {
-        if(parseInt(x['value'])==8)
-        {
-          var temp = text.val();
-          temp = temp.substr(0, cursor-2) +temp.substr(cursor-1);
-          console.log("backspace less ==== " + temp);
-          text.val(temp);
-          setCaretPosition('file', pos -1 );
-        } 
-        else if(parseInt(x['value'])==46)
-        {
-          var temp = text.val();
-          // text.val(x['value']);
-          temp = temp.substr(0, cursor) +temp.substr(cursor+1);
-          text.val(temp);
-          setCaretPosition('file', pos );
-        }
-        else
-        {
-          var temp = text.val();
-          // text.val(x['value']);
-          temp = temp.substr(0, cursor-1) + val+temp.substr(cursor-1);
-          console.log(temp);
-          text.val(temp);
-          setCaretPosition('file', pos +1 );
-        }
-      }
-      // console.log(x.value);
-      // x=eval(x);
-      // console.log(x['value']);
-      // console.log(Object.byString(x, 'value'));
-      // console.log(x['value']);
-      // console.log(y);
-      // temp=value;  
- 	 };
-  });
+        // console.log(x.value);
+        // x=eval(x);
+        // console.log(x['value']);
+        // console.log(Object.byString(x, 'value'));
+        // console.log(x['value']);
+        // console.log(y);
+        // temp=value;
+    };
+});
 
 </script>
 <style type="text/css">

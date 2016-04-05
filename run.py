@@ -6,6 +6,7 @@ from app.server import *
 
 app.secret_key = 'super secret key'
 
+# start socket thread to accept socket connections
 thread.start_new_thread(socket_thread, ())
 
 ip=os.popen("ip route get 8.8.8.8 | awk '{print $NF; exit}'").read()

@@ -22,39 +22,35 @@ def index():
 		passwd = request.form['pass']
 		# ipdb.set_trace()
 		try:
+			# check if file already exists
+			# if doesnt exists then create a new file and enter details in redis
 			if not r.exists(filename) or r.exists == None:
 				r.hmset(filename,{request.remote_addr:filename})
 				r.set(filename+'pass',passwd)
-				# f=open('files/' + filename, 'w+')
-				# f.close()
 				a=soldier.run('touch app/files/' + filename)
+				# start queue for sending data to clients 
 				start_queue(filename)
-				# print 'ddddddddddddddddd'
-				# r.rpush(filename," ")
-				# Q['filename']=[]
+			# if exists check for password
 			else:
 				if r.exists(filename+'pass'):
 					if r.get(filename+'pass')!=passwd:
 						return redirect('/')
 		except:
+			# exception will be if file is not present hence create the file
 			r.hmset(filename,{request.remote_addr:filename})
 			r.set(filename+'pass',passwd)
-			# f=open('files/' + filename, 'w+')
-			# f.close()
-			# os.mknod('files/' + filename)
 			a=soldier.run('touch app/files/' + filename)
-			# Q['filename']=[]
+			# start queue for sending data to clients 
 			start_queue(filename)
-			# print 'ddddddddddddddddd'
-			# r.rpush(filename," ")
 			if r.get(filename+'pass')!=passwd:
 				return redirect('/')
+
+		# add filename to curr ip and vice versa in redis
 		ip_file_map = r.hgetall(filename)
 		ip_file_map[request.remote_addr] = filename
 		r.hmset(filename,ip_file_map)
 		r.set(request.remote_addr, filename)
-		r.set(filename+'lock',0)
-		print request.remote_addr
+		# store that user is logged in 
 		session['logged_in'] = filename
 		return redirect('/edit/' + filename)
 
@@ -62,8 +58,6 @@ def index():
 @app.route('/edit/<filename>/', methods=['GET'])
 @login_required
 def edit(filename):
-	# print 'edit1'
-	
 	if request.method == 'GET':
 		try:
 			f = open('app/files/' + filename, 'r')
@@ -71,7 +65,6 @@ def edit(filename):
 			return 'Invalid File'
 		data = f.read()
 		f.close()
-		# print data
 		ip=os.popen("ip route get 8.8.8.8 | awk '{print $NF; exit}'").read()
 		print ip.split()[0]
 		return render_template('file.html', data=data,ip=ip.split()[0])
